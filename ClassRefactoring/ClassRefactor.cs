@@ -14,43 +14,66 @@ namespace DeveloperSample.ClassRefactoring
 
     public class SwallowFactory
     {
-        public Swallow GetSwallow(SwallowType swallowType) => new Swallow(swallowType);
+        public Swallow GetSwallow(SwallowType swallowType)
+        {
+            switch (swallowType)
+            {
+                case SwallowType.African:
+                    return new AfricanSwallow();
+                case SwallowType.European:
+                    return new EuropeanSwallow();
+                default:
+                    throw new ArgumentException("Invalid SwallowType");
+            }
+        }
     }
 
-    public class Swallow
+    public abstract class Swallow
     {
-        public SwallowType Type { get; }
+        public SwallowType Type { get; protected set; }
         public SwallowLoad Load { get; private set; }
 
-        public Swallow(SwallowType swallowType)
-        {
-            Type = swallowType;
-        }
+      
 
         public void ApplyLoad(SwallowLoad load)
         {
             Load = load;
         }
 
-        public double GetAirspeedVelocity()
+        public abstract double GetAirspeedVelocity();
+
+     
+    }
+
+    public class AfricanSwallow : Swallow
+    {
+        
+        public AfricanSwallow()
         {
-            if (Type == SwallowType.African && Load == SwallowLoad.None)
-            {
-                return 22;
-            }
-            if (Type == SwallowType.African && Load == SwallowLoad.Coconut)
-            {
-                return 18;
-            }
-            if (Type == SwallowType.European && Load == SwallowLoad.None)
-            {
-                return 20;
-            }
-            if (Type == SwallowType.European && Load == SwallowLoad.Coconut)
-            {
-                return 16;
-            }
-            throw new InvalidOperationException();
+            Type = SwallowType.African;
+        }
+
+        public override double GetAirspeedVelocity()
+        {
+            return Load == SwallowLoad.None ? 22 : 18;
         }
     }
+
+    public class EuropeanSwallow : Swallow
+    {
+
+       
+        public EuropeanSwallow()
+        {
+            Type = SwallowType.European;
+        }
+
+
+        public override double GetAirspeedVelocity()
+        {
+            return Load == SwallowLoad.None ? 20 : 16;
+        }
+    }
+
+   
 }

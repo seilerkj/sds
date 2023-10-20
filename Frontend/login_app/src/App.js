@@ -6,9 +6,13 @@ import LoginAttemptList from './LoginAttemptList';
 const App = () => {
   const [loginAttempts, setLoginAttempts] = useState([]);
 
+  const loginSubmit = async ({login, password}) => {
+    await setLoginAttempts([...loginAttempts, {login, password}])
+}
+
   return (
     <div className="App">
-      <LoginForm onSubmit={({ login, password }) => console.log({ login, password })} />
+      <LoginForm onSubmit={loginSubmit} />
       <LoginAttemptList attempts={loginAttempts} />
     </div>
   );
